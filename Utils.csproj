@@ -30,7 +30,6 @@
   <ItemGroup>
     <Compile Include="Assert.cs" />
     <Compile Include="Collections.cs" />
-    <Compile Include="Enumerables.cs" />
     <Compile Include="Floats.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Randoms.cs" />
