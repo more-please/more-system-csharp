@@ -1,7 +1,8 @@
-﻿﻿using System;
+﻿using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Utils
 {
@@ -25,6 +26,28 @@ namespace Utils
 		public static void Dump(this object obj)
 		{
 			Debug.WriteLine(obj.ToDebugString());
+		}
+
+		public static T NotNull<T>(this T obj) where T : class
+		{
+			if (obj == null) throw new NullReferenceException();
+			return obj;
+		}
+
+		public static T NotNull<T>(this T obj, string message) where T : class
+		{
+			if (obj == null) throw new NullReferenceException(message);
+			return obj;
+		}
+
+		public static IDictionary<string, object> AsJsonDict(this object obj)
+		{
+			return (IDictionary<string, object>)obj;
+		}
+
+		public static ICollection<object> AsJsonArray(this object obj)
+		{
+			return (ICollection<object>)obj;
 		}
 	}
 }
