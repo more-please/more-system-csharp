@@ -18,7 +18,7 @@ namespace Utils
 			_dispose = !leaveOpen;
 		}
 
-		public static string Write(object obj)
+		public static string ToString(object obj)
 		{
 			using (var s = new StringWriter())
 			{
@@ -144,13 +144,13 @@ namespace Utils
 			{
 				WriteString(e.Key.ToString());
 				_writer.Write(':');
-				Write(e.Value);
+				WriteValue(e.Value);
 				while (e.MoveNext())
 				{
 					_writer.Write(',');
 					WriteString(e.Key.ToString());
 					_writer.Write(':');
-					Write(e.Value);
+					WriteValue(e.Value);
 				}
 			}
 			_writer.Write('}');
@@ -164,13 +164,13 @@ namespace Utils
 			{
 				WriteString(e.Current.Key as string);
 				_writer.Write(':');
-				Write(e.Current.Value);
+				WriteValue(e.Current.Value);
 				while (e.MoveNext())
 				{
 					_writer.Write(',');
 					WriteString(e.Current.Key as string);
 					_writer.Write(':');
-					Write(e.Current.Value);
+					WriteValue(e.Current.Value);
 				}
 			}
 			_writer.Write('}');
@@ -182,11 +182,11 @@ namespace Utils
 			var e = array.GetEnumerator();
 			if (e.MoveNext())
 			{
-				Write(e.Current);
+				WriteValue(e.Current);
 				while (e.MoveNext())
 				{
 					_writer.Write(',');
-					Write(e.Current);
+					WriteValue(e.Current);
 				}
 			}
 			_writer.Write(']');
