@@ -1,43 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace Utils
 {
-	public class JsonReader
+	public class JsonReader : IDisposable
 	{
 		// ---------------------------------------------------------------------
-		// High-level API
+		// Constructor and convenience functions
+
+		public JsonReader(TextReader reader)
+		{
+			_reader = reader;
+		}
 
 		public static object Read(string str)
 		{
-			try
-			{
-				return new JsonReader(str).Read();
-			}
-			catch (FormatException)
-			{
-				// TODO: log error
-				return null;
-			}
+			using (var r = new JsonReader(new StringReader(str)))
+				return r.Read();
 		}
 
-		public JsonReader(string str, int startIndex = 0)
+		public static object Read(Stream stream)
 		{
-			_str = str;
-			_max = str.Length;
-			_i = startIndex;
+			using (var r = new JsonReader(new StreamReader(stream)))
+				return r.Read();
 		}
+
+		public static object Read(TextReader reader)
+		{
+			using (var r = new JsonReader(reader))
+				return r.Read();
+		}
+
+		// ---------------------------------------------------------------------
+		// Read any JSON value
 
 		public object Read()
 		{
 			Trim();
-			if (AtEnd)
+			int c = Peek;
+			if (c < 0)
 			{
 				Fail("unexpected end of input");
+				return null;
 			}
-			char c = Peek;
-			if (c == '"')
+			else if (c == '"')
 			{
 				return ReadString();
 			}
@@ -49,7 +57,7 @@ namespace Utils
 			{
 				return ReadDict();
 			}
-			else if (c == '-' || char.IsDigit(c))
+			else if (c == '-' || (c >= '0' && c <= '9'))
 			{
 				return ReadNumber();
 			}
@@ -76,7 +84,7 @@ namespace Utils
 		}
 
 		// ---------------------------------------------------------------------
-		// Parse functions for JSON types
+		// Read a specific JSON type
 
 		public object ReadNumber()
 		{
@@ -89,9 +97,9 @@ namespace Utils
 
 			if (Maybe('.'))
 			{
-				int fracPos = _i;
+				int fracPos = Pos;
 				long frac = Decimal();
-				result += frac / Math.Pow(10, _i - fracPos);
+				result += frac / Math.Pow(10, Pos - fracPos);
 			}
 			if (Maybe('e') || Maybe('E'))
 			{
@@ -105,9 +113,8 @@ namespace Utils
 		{
 			StringBuilder result = new StringBuilder();
 			Expect('"');
-			while (!AtEnd)
+			for (int c = Pop(); c >= 0; c = Pop())
 			{
-				char c = Pop();
 				if (c == '"')
 				{
 					return result.ToString();
@@ -123,10 +130,10 @@ namespace Utils
 						case 'r': c = '\r'; break;
 						case 't': c = '\t'; break;
 						case 'u': c = Unicode(); break;
-						default: break;
+						default: Fail("unknown escape code"); break;
 					}
 				}
-				result.Append(c);
+				result.Append((char)c);
 			}
 			Fail("unterminated string");
 			return null;
@@ -184,12 +191,12 @@ namespace Utils
 			int result = 0;
 			for (int i = 0; i < 4; ++i)
 			{
-				if (AtEnd)
+				int c = Pop();
+				if (c < 0)
 				{
 					Fail("Unterminated Unicode escape");
 				}
-				char c = Pop();
-				if (c >= '0' && c <= '9')
+				else if (c >= '0' && c <= '9')
 				{
 					result = (16 * result) + (c - '0');
 				}
@@ -239,39 +246,49 @@ namespace Utils
 		// ---------------------------------------------------------------------
 		// Low-level parse functions
 
-		private bool AtEnd => _i >= _max;
-		private char Peek => _str[_i];
+		private bool AtEnd => _reader.Peek() < 0;
+		private int Peek => _reader.Peek();
+		private int Pos => _pos;
 
-		private char Pop()
+		private int Pop()
 		{
-			return _str[_i++];
+			int result = _reader.Read();
+			if (result >= 0)
+				++_pos;
+			return result;
 		}
 
 		private bool Maybe(char maybe)
 		{
-			if (_i >= _max) return false;
-			if (_str[_i] != maybe) return false;
-			++_i;
+			if (Peek != maybe) return false;
+			Pop();
 			return true;
 		}
 
 		private void Trim()
 		{
-			while (_i < _max && char.IsWhiteSpace(_str, _i))
-				++_i;
+			int c = Peek;
+			while (c >= 0 && char.IsWhiteSpace((char)c))
+			{
+				Pop();
+				c = Peek;
+			}
 		}
 
 		private void Fail(string message)
 		{
-			throw new FormatException($"JSON parse failed at index {_i}: {message}");
+			throw new FormatException($"JSON parse failed at index {_pos}: {message}");
 		}
 
 		// ---------------------------------------------------------------------
 		// State
 
-		private readonly string _str;
-		private readonly int _max;
-		private int _i;
+		public void Dispose()
+		{
+			_reader.Dispose();
+		}
 
+		private readonly TextReader _reader;
+		private int _pos;
 	}
 }
