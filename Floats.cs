@@ -126,7 +126,7 @@ namespace Utils
 
 		public static float Lerp(this float t, float a, float b)
 		{
-			return (1 - t) * a + t * b;
+			return a + t * (b - a);
 		}
 
 		public static double Pow(this float a, float b)
