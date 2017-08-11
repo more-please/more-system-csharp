@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections;
 
 namespace Utils
 {
@@ -40,12 +41,43 @@ namespace Utils
 
 		public static IDictionary<string, object> AsJsonDict(this object obj)
 		{
-			return (IDictionary<string, object>)obj;
+			if (obj is IDictionary<string, object>)
+			{
+				return obj as IDictionary<string, object>;
+			}
+			else if (obj is IDictionary)
+			{
+				var result = new Dictionary<string, object>();
+				foreach (var o in obj as IDictionary)
+				{
+					var e = (DictionaryEntry)o;
+					result.Add(e.Key.ToString(), e.Value);
+				}
+				return result;
+			}
+			else
+			{
+				throw new InvalidCastException($"Can't cast to JSON dict: {obj}");
+			}
 		}
 
 		public static ICollection<object> AsJsonArray(this object obj)
 		{
-			return (ICollection<object>)obj;
+			if (obj is ICollection<object>)
+			{
+				return obj as ICollection<object>;
+			}
+			else if (obj is IEnumerable)
+			{
+				var result = new List<object>();
+				foreach (var o in obj as IEnumerable)
+					result.Add(o);
+				return result;
+			}
+			else
+			{
+				throw new InvalidCastException($"Can't cast to JSON array: {obj}");
+			}
 		}
 
 		public static IDictionary<string, T> AsJsonDict<T>(this object obj, Func<object, T> func)
