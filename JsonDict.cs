@@ -12,8 +12,42 @@ namespace Utils
 		public ICollection<object> Values => _entries.Map(Value);
 		public int Count => _entries.Count;
 
-		public void Add(Entry e) { _entries.Add(e); }
-		public void Add(string key, object val) { _entries.Add(new Entry(key, val)); }
+		public void Add<T>(string key, IEnumerable<T> val) where T: IJsonValue
+		{
+			_entries.Add(new Entry(key, val.ToJsonValue()));
+		}
+
+		public void Add<T>(string key, IDictionary<string, T> val) where T : IJsonValue
+		{
+			_entries.Add(new Entry(key, val.ToJsonValue()));
+		}
+
+		public void Add(string key, IDictionary<string, object> val)
+		{
+			_entries.Add(new Entry(key, val));
+		}
+
+		public void Add(string key, IJsonValue val)
+		{
+			_entries.Add(new Entry(key, val.ToJsonValue()));
+		}
+
+		public void Add(string key, object val)
+		{
+			if (val is IJsonValue)
+				Add(key, val as IJsonValue);
+			else
+				Add(new Entry(key, val));
+		}
+
+		public void Add(Entry e)
+		{
+			if (e.Value is IJsonValue)
+				Add(e.Key, e.Value as IJsonValue);
+			else
+				_entries.Add(e);
+		}
+
 		public bool Remove(Entry e) { return _entries.Remove(e); }
 		public bool Contains(Entry e) { return _entries.Contains(e); }
 		public void Clear() { _entries.Clear(); }
