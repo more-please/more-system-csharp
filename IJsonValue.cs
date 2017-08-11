@@ -14,17 +14,6 @@ namespace Utils
 	}
 
 	//
-	// Implementation of IJsonValue that doesn't do any serialization, just returns this
-	//
-	public class SimpleJsonValue : IJsonValue
-	{
-		public object ToJsonValue()
-		{
-			return this;
-		}
-	}
-
-	//
 	// Implementation for collections of IJsonValues
 	//
 	public static class IJsonValues
