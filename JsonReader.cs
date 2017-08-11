@@ -102,7 +102,7 @@ namespace Utils
 			}
 			else
 			{
-				Fail($"unexpected char: '{c}'");
+				Fail($"unexpected char: '{(char)c}'");
 				return null;
 			}
 		}
@@ -148,6 +148,7 @@ namespace Utils
 					c = Pop();
 					switch (c)
 					{
+						case '"': case '\\': case '/': break;
 						case 'b': c = '\b'; break;
 						case 'f': c = '\f'; break;
 						case 'n': c = '\n'; break;
