@@ -6,10 +6,6 @@ namespace Utils
 {
 	public class JsonReader
 	{
-		private readonly string _str;
-		private readonly int _max;
-		private int _i;
-
 		// ---------------------------------------------------------------------
 		// High-level API
 
@@ -57,16 +53,19 @@ namespace Utils
 			{
 				return ReadNumber();
 			}
-			else if (c == 't' && Maybe("true"))
+			else if (c == 't')
 			{
+				Expect("true");
 				return true;
 			}
-			else if (c == 'f' && Maybe("false"))
+			else if (c == 'f')
 			{
+				Expect("false");
 				return false;
 			}
-			else if (c == 'n' && Maybe("null"))
+			else if (c == 'n')
 			{
+				Expect("null");
 				return null;
 			}
 			else
@@ -227,8 +226,8 @@ namespace Utils
 
 		private void Expect(string expected)
 		{
-			if (!Maybe(expected))
-				Fail($"Expected '{expected}'");
+			foreach (char c in expected)
+				Expect(c);
 		}
 
 		private void Expect(char expected)
@@ -243,21 +242,9 @@ namespace Utils
 		private bool AtEnd => _i >= _max;
 		private char Peek => _str[_i];
 
-		private string Context => _str.Substring(Math.Max(0, _i - 10));
-		private string Rest => _str.Substring(_i);
-
 		private char Pop()
 		{
 			return _str[_i++];
-		}
-
-		private bool Maybe(string maybe)
-		{
-			for (int j = 0; j < maybe.Length; ++j)
-				if (_i + j >= _max || _str[_i + j] != maybe[j])
-					return false;
-			_i += maybe.Length;
-			return true;
 		}
 
 		private bool Maybe(char maybe)
@@ -278,5 +265,13 @@ namespace Utils
 		{
 			throw new FormatException($"JSON parse failed at index {_i}: {message}");
 		}
+
+		// ---------------------------------------------------------------------
+		// State
+
+		private readonly string _str;
+		private readonly int _max;
+		private int _i;
+
 	}
 }
