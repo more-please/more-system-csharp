@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace Utils
 {
@@ -10,33 +11,56 @@ namespace Utils
 		// ---------------------------------------------------------------------
 		// Constructor and convenience functions
 
-		public JsonReader(TextReader reader)
+		public JsonReader(TextReader reader, bool leaveOpen = false)
 		{
 			_reader = reader;
+			_dispose = !leaveOpen;
 		}
 
 		public static object Read(string str)
 		{
 			using (var r = new JsonReader(new StringReader(str)))
-				return r.Read();
+				return r.ReadValue();
 		}
 
-		public static object Read(Stream stream)
+		public static object Read(TextReader reader, bool leaveOpen = false)
 		{
-			using (var r = new JsonReader(new StreamReader(stream)))
-				return r.Read();
+			using (var r = new JsonReader(reader, leaveOpen))
+				return r.ReadValue();
 		}
 
-		public static object Read(TextReader reader)
+		public static object Read(Stream stream, bool leaveOpen = false, int bufferSize = 4096)
 		{
-			using (var r = new JsonReader(reader))
-				return r.Read();
+			var utf8 = new UTF8Encoding(
+				encoderShouldEmitUTF8Identifier: false,
+				throwOnInvalidBytes: true);
+			var reader = new StreamReader(stream, utf8, true, bufferSize, leaveOpen);
+			using (var json = new JsonReader(reader))
+				return json.ReadValue();
+		}
+
+		// ---------------------------------------------------------------------
+		// Override hooks
+
+		public virtual void Fail(string message)
+		{
+			throw new FormatException($"JsonReader error at index {_pos}: {message}");
+		}
+
+		public virtual IDictionary<string, object> NewDict()
+		{
+			return new Dictionary<string, object>();
+		}
+
+		public virtual IList<object> NewArray()
+		{
+			return new List<object>();
 		}
 
 		// ---------------------------------------------------------------------
 		// Read any JSON value
 
-		public object Read()
+		public object ReadValue()
 		{
 			Trim();
 			int c = Peek;
@@ -141,7 +165,7 @@ namespace Utils
 
 		public IList<object> ReadArray()
 		{
-			List<object> result = new List<object>();
+			var result = NewArray();
 			Expect('[');
 			Trim();
 			if (Maybe(']'))
@@ -150,7 +174,7 @@ namespace Utils
 			}
 			do
 			{
-				object item = Read();
+				object item = ReadValue();
 				result.Add(item);
 				Trim();
 			}
@@ -161,7 +185,7 @@ namespace Utils
 
 		public IDictionary<string, object> ReadDict()
 		{
-			var result = new Dictionary<string, object>();
+			var result = NewDict();
 			Expect('{');
 			Trim();
 			if (Maybe('}'))
@@ -174,7 +198,7 @@ namespace Utils
 				string key = ReadString();
 				Trim();
 				Expect(':');
-				object val = Read();
+				object val = ReadValue();
 				result.Add(key, val);
 				Trim();
 			}
@@ -275,20 +299,17 @@ namespace Utils
 			}
 		}
 
-		private void Fail(string message)
-		{
-			throw new FormatException($"JSON parse failed at index {_pos}: {message}");
-		}
-
 		// ---------------------------------------------------------------------
 		// State
 
 		public void Dispose()
 		{
-			_reader.Dispose();
+			if (_dispose)
+				_reader.Dispose();
 		}
 
 		private readonly TextReader _reader;
+		private readonly bool _dispose;
 		private int _pos;
 	}
 }
