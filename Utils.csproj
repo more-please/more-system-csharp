@@ -39,7 +39,6 @@
     <Compile Include="JsonWriter.cs" />
     <Compile Include="JsonReader.cs" />
     <Compile Include="Tasks.cs" />
-    <Compile Include="Actions.cs" />
     <Compile Include="JsonDict.cs" />
   </ItemGroup>
   <ItemGroup>
