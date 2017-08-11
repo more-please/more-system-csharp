@@ -39,15 +39,5 @@ namespace Utils
 			if (obj == null) throw new NullReferenceException(message);
 			return obj;
 		}
-
-		public static IDictionary<string, object> AsJsonDict(this object obj)
-		{
-			return (IDictionary<string, object>)obj;
-		}
-
-		public static ICollection<object> AsJsonArray(this object obj)
-		{
-			return (ICollection<object>)obj;
-		}
 	}
 }
