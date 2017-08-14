@@ -2,9 +2,8 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using System.Collections.Generic;
 
-namespace Utils
+namespace More.System
 {
 	public static class Objects
 	{

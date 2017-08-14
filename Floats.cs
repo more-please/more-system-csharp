@@ -1,6 +1,6 @@
 ﻿﻿using System;
 
-namespace Utils
+namespace More.System
 {
 	public static class Floats
 	{

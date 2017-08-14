@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 
-namespace Utils
+namespace More.System
 {
 	public class CollectionMap<A, B> : ICollection<B>, IReadOnlyCollection<B>
 	{

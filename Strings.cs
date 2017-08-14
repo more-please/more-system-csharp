@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Utils
+namespace More.System
 {
 	public static class Strings
 	{

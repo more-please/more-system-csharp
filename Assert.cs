@@ -1,6 +1,6 @@
 ﻿﻿using System.Diagnostics;
 
-namespace Utils
+namespace More.System
 {
 	public static class Assert
 	{

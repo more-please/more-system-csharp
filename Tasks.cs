@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Utils
+namespace More.System
 {
 	public static class Tasks
 	{

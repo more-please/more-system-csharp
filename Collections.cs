@@ -1,8 +1,7 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System;
 
-namespace Utils
+namespace More.System
 {
 	public static class Collections
 	{
