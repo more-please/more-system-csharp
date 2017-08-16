@@ -18,10 +18,5 @@ namespace More.System
 		{
 			return collection.Count == 0;
 		}
-
-		public static ICollection<B> Map<A,B>(this ICollection<A> collection, Func<A, B> func)
-		{
-			return new CollectionMap<A, B>(collection, func);
-		}
 	}
 }
