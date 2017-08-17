@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 
 namespace More.System
 {
@@ -36,7 +36,17 @@ namespace More.System
 
 		public static float DegreesToRadians(this float f)
 		{
-			return (float)(f* Math.PI / 180);
+			return (float)(f * Math.PI / 180);
+		}
+
+		public static double RadiansToDegrees(this double d)
+		{
+			return d * 180 / Math.PI;
+		}
+
+		public static double DegreesToRadians(this double d)
+		{
+			return d * Math.PI / 180;
 		}
 
 		public static double Sin(this float f)
