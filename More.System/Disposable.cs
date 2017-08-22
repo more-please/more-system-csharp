@@ -3,6 +3,9 @@ using System.Threading;
 
 namespace More.System
 {
+	//
+	// Turns an Action into an IDisposable, so you can use it in a using() block.
+	//
 	public class Disposable : IDisposable
 	{
 		private readonly Action _action;

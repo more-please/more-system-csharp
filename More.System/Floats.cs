@@ -2,6 +2,10 @@
 
 namespace More.System
 {
+	//
+	// Grab-bag of extension methods for floats and doubles, for lazy typists.
+	// I find method calls much more readable that static functions and casts.
+	//
 	public static class Floats
 	{
 		public static int Int(this double d)

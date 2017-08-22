@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +6,9 @@ namespace More.System
 {
 	public static class Strings
 	{
+		//
+		// Index of char c in the given array, or -1 if not found
+		//
 		public static int IndexOf(this char[] arr, char c)
 		{
 			for (int i = 0; i < arr.Length; ++i)
@@ -16,14 +19,36 @@ namespace More.System
 			return -1;
 		}
 
+		//
+		// True if the given array contains char c
+		//
 		public static bool Contains(this char[] arr, char c)
 		{
 			return arr.IndexOf(c) >= 0;
 		}
 
+		//
+		// True if the given string contains char c
+		//
 		public static bool Contains(this string s, char c)
 		{
 			return s.IndexOf(c) >= 0;
+		}
+
+		//
+		// True if the given string starts with char c
+		//
+		public static bool StartsWith(this string s, char c)
+		{
+			return s.Length > 0 && s[0] == c;
+		}
+
+		//
+		// True if the given string ends with char c
+		//
+		public static bool EndsWith(this string s, char c)
+		{
+			return s.Length > 0 && s[s.Length - 1] == c;
 		}
 
 		private static readonly char[] StraightQuotes = { '\'', '"' };
@@ -31,6 +56,10 @@ namespace More.System
 		private static readonly string RightQuotes = "’”";
 		private static readonly string LeftPunctuation = "([{<";
 
+		//
+		// Return a copy of the string with ' and " replaced with curly quotes.
+		// Algorithm inspired by http://www.pensee.com/dunham/smartQuotes.html
+		//
 		public static string WithSmartQuotes(this string s)
 		{
 			StringBuilder b = new StringBuilder();
@@ -77,6 +106,10 @@ namespace More.System
 
 		private static readonly char[] Newlines = { '\n', '\r' };
 
+		//
+		// Break the given string across newlines.
+		// The newline characters themselves are not included in the results.
+		//
 		public static IEnumerable<string> Lines(this string s)
 		{
 			int max = s.Length;
@@ -100,6 +133,11 @@ namespace More.System
 
 		private static readonly char[] Spaces = { ' ', '\t' };
 
+		//
+		// Break the given string into words.
+		// Words can be separated by one or more spaces or tabs.
+		// The spaces and tabs are not included in the output.
+		//
 		public static IEnumerable<string> Words(this string s)
 		{
 			int max = s.Length;
@@ -119,16 +157,6 @@ namespace More.System
 					++i;
 				}
 			}
-		}
-
-		public static bool StartsWith(this string s, char c)
-		{
-			return s.Length > 0 && s[0] == c;
-		}
-
-		public static bool EndsWith(this string s, char c)
-		{
-			return s.Length > 0 && s[s.Length - 1] == c;
 		}
 	}
 }

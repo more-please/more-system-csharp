@@ -1,7 +1,11 @@
-﻿﻿using System;
+﻿using System;
 
 namespace More.System
 {
+	//
+	// Helper functions for random numbers.
+	// Holds a private Random instance so you don't need to.
+	//
 	public static class Randoms
 	{
 		private static Random _random = new Random();

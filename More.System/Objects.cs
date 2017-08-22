@@ -7,6 +7,9 @@ namespace More.System
 {
 	public static class Objects
 	{
+		//
+		// Generate a reasonable ToString for structs, via reflection.
+		//
 		public static string ToDebugString<T>(this T obj)
 		{
 			StringBuilder s = new StringBuilder();
@@ -22,21 +25,12 @@ namespace More.System
 			return s.ToString();
 		}
 
+		//
+		// Print obj.ToDebugString to the debug console.
+		//
 		public static void Dump(this object obj)
 		{
 			Debug.WriteLine(obj.ToDebugString());
-		}
-
-		public static T NotNull<T>(this T obj) where T : class
-		{
-			if (obj == null) throw new NullReferenceException();
-			return obj;
-		}
-
-		public static T NotNull<T>(this T obj, string message) where T : class
-		{
-			if (obj == null) throw new NullReferenceException(message);
-			return obj;
 		}
 	}
 }
