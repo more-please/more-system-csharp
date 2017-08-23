@@ -25,6 +25,11 @@ namespace More.System
 			return _random.Uniform(lo, hi);
 		}
 
+		public static T Choose<T>(params T[] options)
+		{
+			return _random.Choose(options);
+		}
+
 		public static float Uniform(this Random random, float lo, float hi)
 		{
 			return lo + (float)random.NextDouble() * (hi - lo);
@@ -33,6 +38,11 @@ namespace More.System
 		public static int Uniform(this Random random, int lo, int hi)
 		{
 			return random.Next(lo, hi);
+		}
+
+		public static T Choose<T>(this Random random, params T[] options)
+		{
+			return options[random.Next(0, options.Length)];
 		}
 	}
 }
