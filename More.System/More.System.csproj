@@ -37,6 +37,7 @@
     <Compile Include="Tasks.cs" />
     <Compile Include="SemaphoreSlims.cs" />
     <Compile Include="Disposable.cs" />
+    <Compile Include="Ints.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

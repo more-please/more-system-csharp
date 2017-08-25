@@ -1,10 +1,15 @@
-﻿using System;
-namespace More.System
+﻿namespace More.System
 {
-	public class Ints
+	public static class Ints
 	{
-		public Ints()
+		//
+		// Handy for picking the Nth item from a const array, for example:
+		//
+		//		i.Index("zero", "one", "two")
+		//
+		public static T Index<T>(this int i, params T[] arr)
 		{
+			return arr[i];
 		}
 	}
 }
