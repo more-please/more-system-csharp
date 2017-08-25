@@ -11,5 +11,10 @@
 		{
 			return arr[i];
 		}
+
+		public static float Float(this int n)
+		{
+			return (float)n;
+		}
 	}
 }
