@@ -38,6 +38,7 @@ namespace More.System
 		//
 		public static Task ContinueHere(this Task task, Action action)
 		{
+			action = action.NotNull();
 			var actions = _actions;
 			return task.ContinueWith((Task t) =>
 			{
@@ -51,11 +52,21 @@ namespace More.System
 		//
 		public static Task ContinueHere<T>(this Task<T> task, Action<T> action)
 		{
+			action = action.NotNull();
 			var actions = _actions;
 			return task.ContinueWith((Task<T> t) =>
 			{
 				actions.Enqueue(() => action(t.Result));
 			});
+		}
+
+		//
+		// Perform the given action later on this thread, during Tasks.Continue()
+		//
+		public static void Post(Action action)
+		{
+			action = action.NotNull();
+			_actions.Enqueue(action);
 		}
 
 		//
