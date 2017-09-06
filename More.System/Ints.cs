@@ -1,4 +1,5 @@
-﻿namespace More.System
+﻿using System;
+namespace More.System
 {
 	public static class Ints
 	{
@@ -15,6 +16,11 @@
 		public static float Float(this int n)
 		{
 			return (float)n;
+		}
+
+		public static int Clamp(this int i, int min, int max)
+		{
+			return Math.Min(max, Math.Max(min, i));
 		}
 	}
 }
