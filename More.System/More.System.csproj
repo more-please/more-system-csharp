@@ -38,6 +38,7 @@
     <Compile Include="SemaphoreSlims.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="Ints.cs" />
+    <Compile Include="Bools.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
