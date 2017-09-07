@@ -33,6 +33,16 @@ namespace More.System
 			return Math.Round(f);
 		}
 
+		public static float Roundf(this double d)
+		{
+			return (float)Math.Round(d);
+		}
+
+		public static float Roundf(this float f)
+		{
+			return (float)Math.Round(f);
+		}
+
 		public static float RadiansToDegrees(this float f)
 		{
 			return (float)(f * 180 / Math.PI);
