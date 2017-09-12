@@ -167,5 +167,26 @@ namespace More.System
 		{
 			return Math.Min(max, Math.Max(min, f));
 		}
+
+		//
+		// As clamp, but values outside the range [min, max] are compressed.
+		// The output range is [min - range, max + range].
+		//
+		public static float SoftClamp(this float f, float min, float max, float range)
+		{
+			if (f < min) return min + (f - min).Compress(range);
+			if (f > max) return max + (f - max).Compress(range);
+			return f;
+		}
+
+		//
+		// Compress an arbitrary float into the range [-range, +range].
+		//
+		public static float Compress(this float f, float range)
+		{
+			if (f > 0) return range * (1 - Math.Pow(1 / Math.E, f / range).Float());
+			if (f < 0) return range * (Math.Pow(1 / Math.E, -f / range).Float() - 1);
+			return f;
+		}
 	}
 }
