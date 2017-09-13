@@ -180,12 +180,26 @@ namespace More.System
 		}
 
 		//
-		// Compress an arbitrary float into the range [-range, +range].
+		// Compress an arbitrary float into the range (-range, +range).
+		// The slope at f=0 is 1, so values close to zero will be unchanged.
 		//
 		public static float Compress(this float f, float range)
 		{
 			if (f > 0) return range * (1 - Math.Pow(1 / Math.E, f / range).Float());
 			if (f < 0) return range * (Math.Pow(1 / Math.E, -f / range).Float() - 1);
+			return f;
+		}
+
+		//
+		// Expand a float from (-range, +range) to the full range (-inf, +inf)
+		// The slope at f=0 is 1, so values close to zero will be unchanged.
+		//
+		public static float Expand(this float f, float range)
+		{
+			if (f >= range) return Single.PositiveInfinity;
+			if (f <= -range) return Single.NegativeInfinity;
+			if (f > 0) return range * Math.Log(1 - f / range, 1 / Math.E).Float();
+			if (f < 0) return -range * Math.Log(1 + f / range, 1 / Math.E).Float();
 			return f;
 		}
 	}
